@@ -8,8 +8,12 @@
 import Foundation
 protocol UITicTacToeDelegate {
     
-    func onCrossPlayerWin()
+    func onCrossPlayerWins()
     
-    func onCirclePlayerWin()
+    func onCirclePlayerWins()
+    
+    func onDraw()
+    
+    func onEndGameSession()
     
 }

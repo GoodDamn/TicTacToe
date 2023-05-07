@@ -25,7 +25,11 @@ class UITicTacToeView: UIControl {
     private var indexRow = 0;
     private var indexCol = 0;
     
-    private var _IsSecondPlayer = false;
+    private var _NumberOfChoices:UInt8 = 0;
+    
+    private var _IsCrossPlayer = true;
+    
+    private var _isActive:Bool = true;
     
     var delegate: UITicTacToeDelegate? = nil;
     
@@ -38,21 +42,48 @@ class UITicTacToeView: UIControl {
         }
     };
     
-    var gridColor: CGColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).cgColor;
+    var gridColor: UIColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0);
     
-    var crossColor: CGColor = UIColor.green.cgColor;
-    var circleColor: CGColor = UIColor.red.cgColor;
+    var crossColor: UIColor = UIColor.green;
+    var circleColor: UIColor = UIColor.red;
     
     private func initial() {
         padding = Padding(left: 8, top: 8, right: 8, bottom: 8);
     }
     
     private func defineWinner() {
-        if _IsSecondPlayer {
-            delegate?.onCirclePlayerWin();
+        delegate?.onEndGameSession();
+        if _IsCrossPlayer {
+            delegate?.onCrossPlayerWins();
         } else {
-            delegate?.onCrossPlayerWin();
+            delegate?.onCirclePlayerWins();
         }
+    }
+    
+    private func randomPosition() {
+        let posX = Int.random(in: 0..<_Grid.count);
+        let posY = Int.random(in: 0..<_Grid.count);
+        print("randomPosition: CHECKING POSITION:");
+        if _Grid[posX][posY] == 0 {
+            _Grid[posX][posY] = -1;
+            indexCol = posX;
+            indexRow = posY;
+            print("randomPosition:",posX,posY);
+            return;
+        }
+        randomPosition();
+    }
+    
+    func reset() {
+        layer.sublayers = nil;
+        setNeedsDisplay();
+        for i in 0..<_Grid.count {
+            for j in 0..<_Grid.count {
+                _Grid[i][j] = 0;
+            }
+        }
+        _NumberOfChoices = 0;
+        _isActive = true;
     }
     
     override init(frame: CGRect) {
@@ -92,7 +123,7 @@ class UITicTacToeView: UIControl {
         _GridLayer.path = path.cgPath;
         _GridLayer.lineCap = .round;
         _GridLayer.lineWidth = 2;
-        _GridLayer.strokeColor = gridColor;
+        _GridLayer.strokeColor = gridColor.cgColor;
         
         if layer.sublayers == nil {
             layer.addSublayer(_GridLayer);
@@ -110,7 +141,7 @@ class UITicTacToeView: UIControl {
         let ex = _CellWidth * (factorX + 0.50);
         let ey = _CellHeight * (factorY + 0.50);
         
-        if _IsSecondPlayer {
+        if _IsCrossPlayer {
             let crossLayer = CAShapeLayer();
             let crossPath = UIBezierPath();
             
@@ -127,8 +158,20 @@ class UITicTacToeView: UIControl {
             crossLayer.path = crossPath.cgPath;
             crossLayer.lineCap = .round;
             crossLayer.lineWidth = 3;
-            crossLayer.strokeColor = crossColor;
+            crossLayer.strokeColor = crossColor.cgColor;
+         
+            let crossAnimation = CAKeyframeAnimation();
+            
+            crossAnimation.keyPath = "strokeEnd";
+            crossAnimation.values =   [0, 0.55, 0.7, 1];
+            crossAnimation.keyTimes = [0, 0.75, 0.85, 1];
+            crossAnimation.duration = 0.5;
+            
+            crossLayer.add(crossAnimation, forKey: "crossAnim");
+            
             layer.addSublayer(crossLayer);
+            
+            _IsCrossPlayer = false;
             return;
         }
         
@@ -142,11 +185,20 @@ class UITicTacToeView: UIControl {
         circleLayer.path = circlePath.cgPath;
         circleLayer.lineCap = .round;
         circleLayer.lineWidth = 3;
-        circleLayer.fillColor = UIColor(white: 0, alpha: 0).cgColor;
-        circleLayer.strokeColor = circleColor;
+        circleLayer.fillColor = UIColor.clear.cgColor;
+        circleLayer.strokeColor = circleColor.cgColor;
+        
+        let circleAnimation = CAKeyframeAnimation();
+        circleAnimation.keyPath = "strokeEnd";
+        circleAnimation.values =   [0, 0.5, 0.7, 0.8, 0.95, 0.98, 1];
+        circleAnimation.keyTimes = [0, 0.5, 0.7, 0.8, 0.9, 0.9, 1];
+        circleAnimation.duration = 0.4;
+                
+        circleLayer.add(circleAnimation, forKey: "circleAnim");
         
         layer.addSublayer(circleLayer);
         
+        _IsCrossPlayer = true;
     }
     
 }
@@ -166,7 +218,14 @@ extension UITicTacToeView {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         
+        if !_isActive {
+            return;
+        }
+        
+        _isActive = false;
+        
         guard let touch = touches.first else {
+            _isActive = true;
             return;
         }
         
@@ -174,6 +233,7 @@ extension UITicTacToeView {
         
         if end.x < 0 || end.y < 0 || end.x > _GridWidth || end.y > _GridHeight {
             print("TOUCH_END: OUT OF BOUNDS");
+            _isActive = true;
             return;
         }
         
@@ -184,14 +244,19 @@ extension UITicTacToeView {
         
         if _Grid[indexRow][indexCol] != 0 {
             print("TOUCH_END: IT'S BUSY CELL", indexRow, indexCol);
+            _isActive = true;
             return;
         }
         
-        let player:Int8 = _IsSecondPlayer ? 1 : -1;
+        let player:Int8 = _IsCrossPlayer ? 1 : -1;
+        
+        print("PLAYER:",player);
         
         _Grid[indexRow][indexCol] = player;
         
         var diagonal = 0;
+        
+        var isContinue = true;
         
         // Checking a winner
         for i in 0..<_Grid.count {
@@ -210,6 +275,7 @@ extension UITicTacToeView {
             {
                 print("WINNNNNEEERRR!!! OF THE ROW AND COLUMN");
                 defineWinner();
+                isContinue = false;
                 break;
             }
         }
@@ -217,16 +283,35 @@ extension UITicTacToeView {
         if diagonal == 3 {
             print("WINNNNNEEERRR!!!");
             defineWinner();
+            isContinue = false;
         }
         
-        _IsSecondPlayer = !_IsSecondPlayer;
+        if isContinue && _NumberOfChoices >= 8 {
+            delegate?.onEndGameSession();
+            delegate?.onDraw();
+        }
+        
+        if isContinue {
+            _NumberOfChoices += 1;
+            _isActive = true;
+        }
+        
         print("TOUCH_END:",indexRow,indexCol,end);
         setNeedsDisplay();
+        
+        /*if _IsCrossPlayer { // Bot choice
+            _isActive = false;
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                print("BOT CHOICE:");
+                self.randomPosition();
+                print("NEEDS DISPLAY BOT'S CHOICE");
+                self.setNeedsDisplay();
+                self._isActive = true;
+            });
+            setNeedsDisplay();
+        }*/
     }
     
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-    }
 }
 
 extension UIBezierPath {
