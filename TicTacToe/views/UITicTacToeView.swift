@@ -74,16 +74,33 @@ class UITicTacToeView: UIControl {
         randomPosition();
     }
     
-    func reset() {
-        layer.sublayers = nil;
-        setNeedsDisplay();
-        for i in 0..<_Grid.count {
-            for j in 0..<_Grid.count {
-                _Grid[i][j] = 0;
+    func reset(isAnimatable: Bool = true) {
+        let lineWidthAnim = CABasicAnimation();
+        
+        lineWidthAnim.keyPath = "lineWidth";
+        lineWidthAnim.fromValue = 3;
+        lineWidthAnim.toValue = 0;
+        lineWidthAnim.duration = 0.4;
+        
+        if let sublayers = layer.sublayers {
+            for i in 1..<sublayers.count {
+                let layer = sublayers[i] as? CAShapeLayer;
+                layer?.add(lineWidthAnim, forKey: "line");
+                layer?.lineWidth = 0;
             }
         }
-        _NumberOfChoices = 0;
-        _isActive = true;
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+            self.layer.sublayers = nil;
+            self.setNeedsDisplay();
+            for i in 0..<self._Grid.count {
+                for j in 0..<self._Grid.count {
+                    self._Grid[i][j] = 0;
+                }
+            }
+            self._NumberOfChoices = 0;
+            self._isActive = true;
+        });
     }
     
     override init(frame: CGRect) {
