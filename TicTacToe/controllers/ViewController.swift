@@ -20,8 +20,11 @@ class ViewController: UIViewController {
         mViewTicTacToe.layer.cornerRadius = 15.0;
         mViewTicTacToe.clipsToBounds = true;
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.5, execute: {
+            self.mViewTicTacToe.gridColor = UIColor.systemRed;
+        });
+        
     }
-
 }
 
 extension ViewController: UITicTacToeDelegate {

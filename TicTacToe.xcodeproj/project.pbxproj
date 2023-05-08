@@ -18,6 +18,8 @@
 		2B801A592A060D21008A70B3 /* UITicTacToeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B801A582A060D21008A70B3 /* UITicTacToeView.swift */; };
 		2B801A5C2A06257C008A70B3 /* Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B801A5B2A06257C008A70B3 /* Padding.swift */; };
 		2B801A5F2A06974C008A70B3 /* UITicTacToeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B801A5E2A06974C008A70B3 /* UITicTacToeDelegate.swift */; };
+		2B801A6C2A08C042008A70B3 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B801A6B2A08C042008A70B3 /* EditorViewController.swift */; };
+		2B801A6E2A08C08D008A70B3 /* UIGraphWavesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B801A6D2A08C08D008A70B3 /* UIGraphWavesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		2B801A582A060D21008A70B3 /* UITicTacToeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITicTacToeView.swift; sourceTree = "<group>"; };
 		2B801A5B2A06257C008A70B3 /* Padding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Padding.swift; sourceTree = "<group>"; };
 		2B801A5E2A06974C008A70B3 /* UITicTacToeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITicTacToeDelegate.swift; sourceTree = "<group>"; };
+		2B801A6B2A08C042008A70B3 /* EditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
+		2B801A6D2A08C08D008A70B3 /* UIGraphWavesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIGraphWavesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,12 +109,12 @@
 		2B801A262A060B2E008A70B3 /* TicTacToe */ = {
 			isa = PBXGroup;
 			children = (
+				2B801A6A2A08C025008A70B3 /* controllers */,
+				2B801A632A07ADCE008A70B3 /* coreGraphics */,
 				2B801A5D2A06972F008A70B3 /* delegates */,
 				2B801A5A2A06255B008A70B3 /* structures */,
-				2B801A572A060D02008A70B3 /* views */,
 				2B801A272A060B2E008A70B3 /* AppDelegate.swift */,
 				2B801A292A060B2E008A70B3 /* SceneDelegate.swift */,
-				2B801A2B2A060B2E008A70B3 /* ViewController.swift */,
 				2B801A2D2A060B2E008A70B3 /* Main.storyboard */,
 				2B801A302A060B30008A70B3 /* Assets.xcassets */,
 				2B801A322A060B30008A70B3 /* LaunchScreen.storyboard */,
@@ -141,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				2B801A582A060D21008A70B3 /* UITicTacToeView.swift */,
+				2B801A6D2A08C08D008A70B3 /* UIGraphWavesView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -159,6 +164,23 @@
 				2B801A5E2A06974C008A70B3 /* UITicTacToeDelegate.swift */,
 			);
 			path = delegates;
+			sourceTree = "<group>";
+		};
+		2B801A632A07ADCE008A70B3 /* coreGraphics */ = {
+			isa = PBXGroup;
+			children = (
+				2B801A572A060D02008A70B3 /* views */,
+			);
+			path = coreGraphics;
+			sourceTree = "<group>";
+		};
+		2B801A6A2A08C025008A70B3 /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				2B801A2B2A060B2E008A70B3 /* ViewController.swift */,
+				2B801A6B2A08C042008A70B3 /* EditorViewController.swift */,
+			);
+			path = controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -293,10 +315,12 @@
 			files = (
 				2B801A2C2A060B2E008A70B3 /* ViewController.swift in Sources */,
 				2B801A5C2A06257C008A70B3 /* Padding.swift in Sources */,
+				2B801A6E2A08C08D008A70B3 /* UIGraphWavesView.swift in Sources */,
 				2B801A592A060D21008A70B3 /* UITicTacToeView.swift in Sources */,
 				2B801A5F2A06974C008A70B3 /* UITicTacToeDelegate.swift in Sources */,
 				2B801A282A060B2E008A70B3 /* AppDelegate.swift in Sources */,
 				2B801A2A2A060B2E008A70B3 /* SceneDelegate.swift in Sources */,
+				2B801A6C2A08C042008A70B3 /* EditorViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -22,8 +22,8 @@ class UITicTacToeView: UIControl {
     private var _CellWidth: CGFloat!;
     private var _CellHeight: CGFloat!;
     
-    private var indexRow = 0;
-    private var indexCol = 0;
+    private var _IndexRow = 0;
+    private var _IndexCol = 0;
     
     private var _NumberOfChoices:UInt8 = 0;
     
@@ -42,9 +42,23 @@ class UITicTacToeView: UIControl {
         }
     };
     
-    var gridColor: UIColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0);
+    var gridColor: UIColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0) {
+        didSet {
+            guard let layers = layer.sublayers else {
+                return;
+            }
+            (layers[0] as? CAShapeLayer)?.strokeColor = gridColor.cgColor;
+        }
+    };
     
-    var crossColor: UIColor = UIColor.green;
+    var crossColor: UIColor = UIColor.green {
+        didSet {
+            guard let layers = layer.sublayers else {
+                return;
+            }
+                        
+        }
+    };
     var circleColor: UIColor = UIColor.red;
     
     private func initial() {
@@ -66,8 +80,8 @@ class UITicTacToeView: UIControl {
         print("randomPosition: CHECKING POSITION:");
         if _Grid[posX][posY] == 0 {
             _Grid[posX][posY] = -1;
-            indexCol = posX;
-            indexRow = posY;
+            _IndexCol = posX;
+            _IndexRow = posY;
             print("randomPosition:",posX,posY);
             return;
         }
@@ -115,42 +129,39 @@ class UITicTacToeView: UIControl {
     
     override func draw(_ rect: CGRect) {
         
-        let path = UIBezierPath();
-        
-        UIBezierPath.addLine(x1: _CellWidth+padding.left,
-                y1: padding.top,
-                x2: _CellWidth,
-                y2: _GridHeight, path);
-        
-        UIBezierPath.addLine(x1: _CellWidth * 2,
-                y1: padding.top,
-                x2: _CellWidth * 2,
-                y2: _GridHeight, path);
-    
-        UIBezierPath.addLine(x1: padding.left,
-                y1: _CellHeight,
-                x2: _GridWidth,
-                y2: _CellHeight, path);
-        
-        UIBezierPath.addLine(x1: padding.left,
-                y1: _CellHeight * 2,
-                x2: _GridWidth,
-                y2: _CellHeight * 2, path)
-        
-        _GridLayer.path = path.cgPath;
-        _GridLayer.lineCap = .round;
-        _GridLayer.lineWidth = 2;
-        _GridLayer.strokeColor = gridColor.cgColor;
-        
         if layer.sublayers == nil {
+            let path = UIBezierPath();
+            
+            UIBezierPath.addLine(x1: _CellWidth+padding.left,
+                    y1: padding.top,
+                    x2: _CellWidth,
+                    y2: _GridHeight, path);
+            
+            UIBezierPath.addLine(x1: _CellWidth * 2,
+                    y1: padding.top,
+                    x2: _CellWidth * 2,
+                    y2: _GridHeight, path);
+        
+            UIBezierPath.addLine(x1: padding.left,
+                    y1: _CellHeight,
+                    x2: _GridWidth,
+                    y2: _CellHeight, path);
+            
+            UIBezierPath.addLine(x1: padding.left,
+                    y1: _CellHeight * 2,
+                    x2: _GridWidth,
+                    y2: _CellHeight * 2, path)
+            
+            _GridLayer.path = path.cgPath;
+            _GridLayer.lineCap = .round;
+            _GridLayer.lineWidth = 2;
+            _GridLayer.strokeColor = gridColor.cgColor;
             layer.addSublayer(_GridLayer);
             return;
         }
         
-        
-        
-        let factorX = CGFloat(indexCol) + 0.25;
-        let factorY = CGFloat(indexRow) + 0.25;
+        let factorX = CGFloat(_IndexCol) + 0.25;
+        let factorY = CGFloat(_IndexRow) + 0.25;
         
         let bx = _CellWidth * factorX;
         let by = _CellHeight * factorY;
@@ -185,7 +196,6 @@ class UITicTacToeView: UIControl {
             crossAnimation.duration = 0.5;
             
             crossLayer.add(crossAnimation, forKey: "crossAnim");
-            
             layer.addSublayer(crossLayer);
             
             _IsCrossPlayer = false;
@@ -212,12 +222,11 @@ class UITicTacToeView: UIControl {
         circleAnimation.duration = 0.4;
                 
         circleLayer.add(circleAnimation, forKey: "circleAnim");
-        
+                
         layer.addSublayer(circleLayer);
         
         _IsCrossPlayer = true;
     }
-    
 }
 
 extension UITicTacToeView {
@@ -254,13 +263,13 @@ extension UITicTacToeView {
             return;
         }
         
-        indexCol = Int(end.x / _CellWidth);
-        indexRow = Int(end.y / _CellHeight);
+        _IndexCol = Int(end.x / _CellWidth);
+        _IndexRow = Int(end.y / _CellHeight);
         
         print("TOUCH_END: MAP:",_Grid);
         
-        if _Grid[indexRow][indexCol] != 0 {
-            print("TOUCH_END: IT'S BUSY CELL", indexRow, indexCol);
+        if _Grid[_IndexRow][_IndexCol] != 0 {
+            print("TOUCH_END: IT'S BUSY CELL", _IndexRow, _IndexCol);
             _isActive = true;
             return;
         }
@@ -269,7 +278,7 @@ extension UITicTacToeView {
         
         print("PLAYER:",player);
         
-        _Grid[indexRow][indexCol] = player;
+        _Grid[_IndexRow][_IndexCol] = player;
         
         var diagonal = 0;
         
@@ -313,20 +322,8 @@ extension UITicTacToeView {
             _isActive = true;
         }
         
-        print("TOUCH_END:",indexRow,indexCol,end);
+        print("TOUCH_END:",_IndexRow,_IndexCol,end);
         setNeedsDisplay();
-        
-        /*if _IsCrossPlayer { // Bot choice
-            _isActive = false;
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                print("BOT CHOICE:");
-                self.randomPosition();
-                print("NEEDS DISPLAY BOT'S CHOICE");
-                self.setNeedsDisplay();
-                self._isActive = true;
-            });
-            setNeedsDisplay();
-        }*/
     }
     
 }
