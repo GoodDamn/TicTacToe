@@ -8,10 +8,93 @@
 import UIKit
 class EditorViewController: UIViewController {
     
+    private let TAG = "EditorViewController:";
+    
     @IBOutlet weak var _ViewGraphWaves: UIGraphWavesView!;
+    
+    private let _HTTPS_URL_WAV_FILE = "https://file-examples.com/storage/fe734802fc6459067bb6fad/2017/11/file_example_WAV_2MG.wav";
     
     override func viewDidLoad() {
         super.viewDidLoad();
         
+        // Downloading a file
+        
+        guard let url = URL(string: _HTTPS_URL_WAV_FILE) else {
+            print(TAG,"INVALID URL");
+            return;
+        }
+        
+        print(TAG, "PREPARE TO DOWNLOAD...");
+        
+        URLSession.shared.dataTask(with: URLRequest(url: url), completionHandler: {
+            data, response, error in
+        
+            print(self.TAG, "COMPLETING DOWNLOAD...");
+            
+            guard let data = data, error == nil else {
+                print(self.TAG, "THROWN AN ERROR:", error.debugDescription);
+                return;
+            }
+            
+            print(self.TAG,"DATA:",data);
+            
+            let arr = ([UInt8])(data);
+            
+            DispatchQueue.main.async {
+                guard let dataTag = "data".data(using: .ascii) else {
+                    return;
+                }
+                
+                
+                let fileSize = UInt32.from(([UInt8])(arr[4..<8]));
+                
+                // Reading format chunk
+                
+                let channels = UInt16.from(([UInt8])(arr[22..<24]));
+                let sampleRate = UInt32.from(([UInt8])(arr[24..<28]));
+                let bitRate = UInt32.from(([UInt8])(arr[28..<32]));
+                let blockAlign = UInt16.from(([UInt8])(arr[32..<34]));
+                let bitDepth = UInt16.from(([UInt8])(arr[34..<36]));
+
+                print("\nFILE INFO:");
+                print("FILE SIZE:",fileSize);
+                print("CHANNELS:", channels);
+                print("SAMPLE RATE:", sampleRate);
+                print("BIT RATE:", bitRate);
+                print("BLOCK ALIGN:",blockAlign);
+                print("BIT DEPTH:",bitDepth,"\n");
+                
+                // Reading data chunk
+                
+                let tag = data.firstRange(of: dataTag);
+                
+                let dataSize = UInt32.from(([UInt8]) (arr[40...43]));
+                
+                print(self.TAG, "UINT8:",data, arr[40...43], dataSize);
+                
+                let upper = 44+dataSize;
+                
+                self._ViewGraphWaves.audioData = data.subdata(in: 44..<Int(upper));
+            }
+            
+        }).resume();
+        
+    }
+}
+
+extension UInt32 {
+    
+    static func from(_ data: [UInt8]) -> UInt32 { // For big-endian order
+        return UInt32(data[0]) |
+        (UInt32(data[1]) << 8) |
+        (UInt32(data[2]) << 16) |
+        (UInt32(data[3]) << 24);
+    }
+}
+
+extension UInt16 {
+    
+    static func from(_ data: [UInt8]) -> UInt16 {
+        return UInt16(data[0]) | (UInt16(data[1]) << 8);
     }
 }
