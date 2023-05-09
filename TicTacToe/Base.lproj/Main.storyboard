@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pqc-Re-K4p">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="E3h-Dg-9hu">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
@@ -8,16 +8,75 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Main-->
+        <scene sceneID="geK-Qq-vsM">
+            <objects>
+                <viewController title="Main" id="uwj-EZ-TTf" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="9tf-3I-mxt">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="MT5-mw-AnF">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J0N-Yx-wpo">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="331.5"/>
+                                        <state key="normal" title="Audio editor"/>
+                                        <connections>
+                                            <segue destination="pqc-Re-K4p" kind="show" id="Qmd-Cd-maZ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sbf-Pd-uRC">
+                                        <rect key="frame" x="0.0" y="341.5" width="414" height="432.5"/>
+                                        <state key="normal" title="Tic Tac Toe"/>
+                                        <connections>
+                                            <segue destination="BYZ-38-t0r" kind="show" id="RSI-vW-9kt"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="pPU-kk-rw8"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="MT5-mw-AnF" firstAttribute="leading" secondItem="pPU-kk-rw8" secondAttribute="leading" id="77E-H3-G61"/>
+                            <constraint firstItem="pPU-kk-rw8" firstAttribute="trailing" secondItem="MT5-mw-AnF" secondAttribute="trailing" id="GAV-Hv-x4e"/>
+                            <constraint firstItem="MT5-mw-AnF" firstAttribute="top" secondItem="pPU-kk-rw8" secondAttribute="top" id="X3y-JK-s4X"/>
+                            <constraint firstItem="pPU-kk-rw8" firstAttribute="bottom" secondItem="MT5-mw-AnF" secondAttribute="bottom" id="eZr-ZX-8WH"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="HaP-kL-WbN"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pjp-RJ-Grc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-749" y="104"/>
+        </scene>
+        <!--Main-->
+        <scene sceneID="6Ol-rE-Dwc">
+            <objects>
+                <navigationController title="Main" id="E3h-Dg-9hu" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="dNZ-Bq-pzS">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="uwj-EZ-TTf" kind="relationship" relationship="rootViewController" id="PI8-s1-44J"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pOq-Q3-LJw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1575" y="104"/>
+        </scene>
+        <!--Tic Tac Toe-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="TicTacToe" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Tic Tac Toe" id="BYZ-38-t0r" customClass="ViewController" customModule="TicTacToe" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nBQ-6N-6Be" customClass="UITicTacToeView" customModule="TicTacToe" customModuleProvider="target">
-                                <rect key="frame" x="87" y="333" width="240" height="240"/>
+                                <rect key="frame" x="87" y="355" width="240" height="240"/>
                                 <color key="backgroundColor" systemColor="systemGray6Color"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="240" id="R34-zM-ovx"/>
@@ -25,7 +84,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Play it" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X9e-9U-HyF">
-                                <rect key="frame" x="184" y="287" width="46" height="21"/>
+                                <rect key="frame" x="184" y="309" width="46" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -40,6 +99,7 @@
                             <constraint firstItem="X9e-9U-HyF" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="fW3-ge-7nA"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="y5e-u6-dx2"/>
                     <connections>
                         <outlet property="mLabel" destination="X9e-9U-HyF" id="Nrk-5q-0q2"/>
                         <outlet property="mViewTicTacToe" destination="nBQ-6N-6Be" id="j03-FU-f4c"/>
@@ -47,12 +107,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="90" y="104"/>
+            <point key="canvasLocation" x="70" y="498"/>
         </scene>
-        <!--Editor View Controller-->
+        <!--Audio editor-->
         <scene sceneID="1Ua-Ov-tZp">
             <objects>
-                <viewController id="pqc-Re-K4p" customClass="EditorViewController" customModule="TicTacToe" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Audio editor" id="pqc-Re-K4p" customClass="EditorViewController" customModule="TicTacToe" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="aEP-mA-B3g">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -74,13 +134,14 @@
                             <constraint firstItem="wbu-hP-bUV" firstAttribute="leading" secondItem="h19-dL-ild" secondAttribute="leading" constant="20" id="goD-UC-l1P"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="xuk-8q-XoL"/>
                     <connections>
                         <outlet property="_ViewGraphWaves" destination="wbu-hP-bUV" id="lO8-x5-wKs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5xz-WI-Sw1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="916" y="104"/>
+            <point key="canvasLocation" x="70" y="-198"/>
         </scene>
     </scenes>
     <resources>

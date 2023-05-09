@@ -12,10 +12,33 @@ class EditorViewController: UIViewController {
     
     @IBOutlet weak var _ViewGraphWaves: UIGraphWavesView!;
     
-    private let _HTTPS_URL_WAV_FILE = "https://file-examples.com/storage/fe734802fc6459067bb6fad/2017/11/file_example_WAV_2MG.wav";
+    private let _HTTPS_URL_WAV_FILE = "https://file-examples.com/storage/fe0b859904645a822993054/2017/11/file_example_WAV_2MG.wav";
+    
     
     override func viewDidLoad() {
         super.viewDidLoad();
+        
+        
+        let fileManager = FileManager.default;
+        let url = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("sound.wav");
+        
+        
+        // Checking an existing .wav file for editing
+        print(TAG,"CHECKING URL PATH:",url.path);
+        if fileManager.fileExists(atPath: url.path) {
+            
+            guard let data = fileManager.contents(atPath: url.path) else {
+                return;
+            };
+            
+            let arr = ([UInt8])(data);
+            
+            let dataSize = UInt32.from(([UInt8]) (arr[40...43]));
+            print(self.TAG, "UINT8:",data, arr[40...43], dataSize);
+            let upper = 44+dataSize;
+            self._ViewGraphWaves.audioData = data.subdata(in: 44..<Int(upper));
+            return;
+        }
         
         // Downloading a file
         
@@ -38,13 +61,22 @@ class EditorViewController: UIViewController {
             
             print(self.TAG,"DATA:",data);
             
-            let arr = ([UInt8])(data);
-            
             DispatchQueue.main.async {
+                let arr = ([UInt8])(data);
+                
                 guard let dataTag = "data".data(using: .ascii) else {
                     return;
                 }
                 
+                
+                // Save file to the user's storage
+                
+                print("URL TO SAVE:",url);
+                do {
+                    try? data.write(to: url);
+                } catch {
+                    print(self.TAG, "THROWN AN EXCEPTION WHEN WRITING DATA TO A FILE:", error.localizedDescription);
+                }
                 
                 let fileSize = UInt32.from(([UInt8])(arr[4..<8]));
                 
