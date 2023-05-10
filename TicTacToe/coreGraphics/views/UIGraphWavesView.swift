@@ -6,18 +6,20 @@
 //
 
 import UIKit;
-import AVFoundation;
 
 class UIGraphWavesView: UIControl {
     
     private var _ClipLayer: CAShapeLayer? = nil;
     private var _ClipPath: UIBezierPath? = nil;
     
+    var delegate: UIGraphWavesDelegate? = nil;
+    
     var audioData:Data? = nil {
         didSet {
             setNeedsDisplay();
         }
     };
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame);
@@ -136,6 +138,30 @@ extension UIGraphWavesView {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        guard let b = _ClipPath?.bounds else {
+            return;
+        }
+        
+        var originClip = b.origin;
+        var size = b.size;
+        
+        if originClip.x < 0 {
+            size.width += originClip.x;
+            originClip.x = 0;
+        } else if originClip.x + size.width > bounds.width {
+            size.width = bounds.width - originClip.x;
+        }
+        
+        let durationMS = CGFloat(audioData!.count);
+        
+        let fromPos = Int(originClip.x / bounds.width * durationMS);
+        let toPos = Int((originClip.x + size.width) / bounds.width * durationMS);
+        
+        let clippedAudioData = audioData!.subdata(in: fromPos..<toPos);
+        print("CLIPPED AUDIO DATA:",clippedAudioData.count, fromPos, toPos);
+        
+        delegate?.onClippedAudio(clippedAudioData);
         
     }
 }
