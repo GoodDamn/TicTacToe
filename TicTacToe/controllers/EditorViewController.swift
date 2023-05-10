@@ -54,7 +54,6 @@ class EditorViewController: UIViewController {
         let fileManager = FileManager.default;
         let cacheURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("sound.wav");
         
-        
         // Checking an existing .wav file for editing
         print(TAG,"CHECKING URL PATH:",cacheURL.path);
         if fileManager.fileExists(atPath: cacheURL.path) {
@@ -73,6 +72,13 @@ class EditorViewController: UIViewController {
         }
         
         print(TAG, "PREPARE TO DOWNLOAD...");
+        
+        let indicatorView = UIActivityIndicatorView(style: .medium);
+        indicatorView.center = view.center;
+        
+        view.addSubview(indicatorView);
+        
+        indicatorView.startAnimating();
         
         URLSession.shared.dataTask(with: URLRequest(url: url), completionHandler: {
             data, response, error in
@@ -130,6 +136,13 @@ class EditorViewController: UIViewController {
                 print("BIT DEPTH:",bitDepth,"\n");
                 
                 self.configureGraphWave(data);
+                
+                UIView.animate(withDuration: 0.5, animations: {
+                    indicatorView.alpha = 0.0;
+                }, completion: {
+                    _ in
+                    indicatorView.removeFromSuperview();
+                })
             }
             
         }).resume();
@@ -141,6 +154,8 @@ extension EditorViewController: UIGraphWavesDelegate {
     
     func onClippedAudio(_ clippedData: Data) {
         print(TAG, "onClippedAudio():", clippedData);
+        
+        // Update data source for audio player;
         
         _AudioPlayer.stop();
         do {
